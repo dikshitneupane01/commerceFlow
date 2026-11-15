@@ -1,0 +1,12 @@
+from fastapi import FastAPI
+
+from app.core.config import get_settings
+
+settings = get_settings()
+
+app = FastAPI(title="CommerceFlow API", version="0.1.0")
+
+
+@app.get("/health", tags=["system"])
+def health() -> dict:
+    return {"status": "ok", "env": settings.app_env}
