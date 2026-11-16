@@ -1,6 +1,10 @@
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# config.py -> core -> app -> backend -> commerceflow (project root)
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
 
 class Settings(BaseSettings):
@@ -9,7 +13,12 @@ class Settings(BaseSettings):
     database_url: str
     redis_url: str
 
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    # Reads commerceflow/.env when it exists. A missing file is ignored,
+    # so real environment variables (Docker, production) still work.
+    model_config = SettingsConfigDict(
+        env_file=PROJECT_ROOT / ".env",
+        extra="ignore",
+    )
 
 
 @lru_cache
